@@ -47,3 +47,7 @@ npx wrangler secret put ADMIN_PASS
 ## 安全
 
 仓库不保存任何密钥；`ADMIN_PASS`、目标任务 token、`Authorization`、`x-admin-token` 等只放 Cloudflare Secret/KV 或本机临时文件。
+
+## 现有 Cron 迁移评估
+
+详见：[`docs/cron-migration-assessment.md`](docs/cron-migration-assessment.md)。
