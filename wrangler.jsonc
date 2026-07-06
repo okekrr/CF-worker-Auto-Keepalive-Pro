@@ -16,6 +16,20 @@
       "id": "f8c69783f07243a6b3062a8bcde31732"
     }
   ],
+  "services": [
+    {
+      "binding": "US_MARKET_DAILY",
+      "service": "us-market-daily"
+    },
+    {
+      "binding": "SUB_PROXY_MANAGER",
+      "service": "sub-proxy-manager"
+    },
+    {
+      "binding": "NODEWARDEN",
+      "service": "nodewarden"
+    }
+  ],
   "triggers": {
     "crons": ["*/5 * * * *"]
   }

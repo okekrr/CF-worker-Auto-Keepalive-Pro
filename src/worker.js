@@ -874,15 +874,32 @@ function parseTaskHeaders(task) {
     return headers;
 }
 
-async function executeHttpTask(task) {
+function getServiceBindingForTask(task, env) {
+    try {
+        const host = new URL(task.url).hostname;
+        const serviceMap = {
+            'us-market-daily.okekrr.workers.dev': env.US_MARKET_DAILY,
+            'sub-proxy-manager.okekrr.workers.dev': env.SUB_PROXY_MANAGER,
+            'nodewarden.okekrr.workers.dev': env.NODEWARDEN,
+        };
+        return serviceMap[host] || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function executeHttpTask(task, env) {
     const method = String(task.method || 'GET').toUpperCase();
     const init = {
         method,
         headers: parseTaskHeaders(task),
-        cf: { cacheTtl: 0 }
     };
     if (!['GET', 'HEAD'].includes(method) && task.body) init.body = task.body;
-    return await fetch(task.url, init);
+    const serviceBinding = getServiceBindingForTask(task, env);
+    if (serviceBinding && typeof serviceBinding.fetch === 'function') {
+        return await serviceBinding.fetch(new Request(task.url, init));
+    }
+    return await fetch(task.url, { ...init, cf: { cacheTtl: 0 } });
 }
 
 // Bark/DingTalk/Lark 加密与发送辅助函数
@@ -1034,7 +1051,7 @@ export default {
                 const startTs = Date.now();
 
                 try {
-                    const res = await executeHttpTask(task);
+                    const res = await executeHttpTask(task, env);
                     isSuccess = res.ok;
                     const rtt = Date.now() - startTs;
                     detailMsg = isSuccess ? `${task.method || 'GET'} HTTP ${res.status} (${rtt}ms)` : `${task.method || 'GET'} HTTP 状态异常: ${res.status}`;

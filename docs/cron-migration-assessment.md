@@ -46,4 +46,5 @@
 - `sub-proxy-manager`、`nodewarden`、`us-market-daily` 的 Cloudflare Cron schedules 均已清空，统一由 `auto-keepalive-cronhub` 调度。
 - `auto-keepalive-cronhub` 仍保留唯一 Cron：`*/5 * * * *`。
 - 当前 Cloudflare Cron 使用：`3/5`：`cloud-mail` 2 个，`auto-keepalive-cronhub` 1 个。
-- CronHub 任务请求 Header 只记录 Header 名称，不在文档中记录任何 token 值；为避免 Cloudflare 1010 拦截，任务请求已补充普通 `User-Agent`/`Accept`。
+- CronHub 任务请求 Header 只记录 Header 名称，不在文档中记录任何 token 值。
+- 已给 CronHub 增加 Service Bindings：`US_MARKET_DAILY`、`SUB_PROXY_MANAGER`、`NODEWARDEN`。CronHub 内部调用这三个 Worker 时优先走 Cloudflare 账号内服务绑定，避免 Worker 子请求访问 `*.workers.dev` 返回 404。

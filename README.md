@@ -8,6 +8,7 @@
 - 线上地址：`https://auto-keepalive-cronhub.okekrr.workers.dev`
 - Cron：`*/5 * * * *`
 - 存储：Cloudflare KV，binding 为 `DB`
+- 内部调用：对已迁移的同账号 Worker 优先使用 Cloudflare Service Bindings，避免 Worker 子请求访问 `*.workers.dev` 返回 404
 
 ## 已改造能力
 
@@ -17,11 +18,13 @@
 - 支持 `runAt + timeZone + weekdays + windowMinutes` 的固定时间窗口调度。
 - 支持每天只执行一次的 `lastRunKey` 防重复逻辑。
 - 保留原版 `interval` 间隔保活能力。
+- 已绑定 `US_MARKET_DAILY`、`SUB_PROXY_MANAGER`、`NODEWARDEN` 三个 Service Binding。
 
 ## 当前接入任务
 
 - 美股盘后日报：每周二到周六 `Asia/Shanghai 06:40` 左右触发一次。
-- 目标：`POST https://us-market-daily.okekrr.workers.dev/api/generate?async=0`
+- sub-proxy-manager KV 备份：每天 `Asia/Shanghai 11:30` 触发一次。
+- nodewarden 计划备份检查：每 5 分钟触发一次。
 - 鉴权 Header 存在 Cloudflare KV 的任务配置中，不写入仓库。
 
 ## 本地使用
