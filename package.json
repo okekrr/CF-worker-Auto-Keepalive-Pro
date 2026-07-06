@@ -1,0 +1,14 @@
+{
+  "name": "auto-keepalive-cronhub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy --minify",
+    "deploy:dry": "wrangler deploy --dry-run",
+    "dev": "wrangler dev --test-scheduled --port 8788"
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  }
+}

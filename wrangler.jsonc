@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "auto-keepalive-cronhub",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-07-06",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "ADMIN_USER": "admin"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "DB",
+      "id": "f8c69783f07243a6b3062a8bcde31732"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  }
+}
